@@ -1,0 +1,47 @@
+service: module-4
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: dev
+  region: us-east-1
+  iam:
+    role: arn:aws:iam::797912155957:role/Lambda-Admin
+
+functions:
+  registerQuiz:
+    handler: src/registerQuiz.handler
+    events:
+      - http:
+          path: register-quiz
+          method: post
+          cors: true
+  getParticipants:
+    handler: src/getTotalParticipants.handler
+    events:
+      - http:
+          path: get-participants
+          method: post
+          cors: true
+
+resources:
+  Resources:
+    quizParticipation:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: quiz-participation
+        AttributeDefinitions:
+          - AttributeName: quizId
+            AttributeType: S
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: quizId
+            KeyType: HASH
+          - AttributeName: userId
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1

@@ -1,0 +1,15 @@
+service: module-10
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: dev
+  region: us-east-1
+  iam:
+    role: arn:aws:iam::797912155957:role/Lambda-Admin
+
+functions:
+  getAllQuizzes:
+    handler: src/getAllQuizzes.handler
